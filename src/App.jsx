@@ -2,17 +2,27 @@ import { useState } from "react";
 import Player from "./components/Player";
 import GameBoard from "./components/GameBoard";
 import Log from "./components/Log";
+import { WINNING_COMBINATIONS } from "./winning-combinations";
+
+function deriveActivePlayer(gameTurns) {
+  let currentPlayer = "X";
+  if (gameTurns.length > 0 && gameTurns[0].player === "X") {
+    currentPlayer = "O";
+  }
+
+  return currentPlayer;
+}
 
 function App() {
   const [gameTurns, setGameTurns] = useState([]);
-  const [activePlayer, setActivePlayer] = useState("X");
+  // const [activePlayer, setActivePlayer] = useState("X");
+  const activePlayer = deriveActivePlayer(gameTurns);
+
   function handleSelectSqure(rowIndex, colIndex) {
-    setActivePlayer((curActivePlayer) => (curActivePlayer === "X" ? "O" : "X"));
+    // setActivePlayer((curActivePlayer) => (curActivePlayer === "X" ? "O" : "X"));
     setGameTurns((prevTurns) => {
-      let currentPlayer = "X";
-      if (prevTurns > 0 && prevTurns[0].player === "X") {
-        currentPlayer = "O";
-      }
+      const currentPlayer = deriveActivePlayer(prevTurns);
+
       const updateTurns = [
         { square: { row: rowIndex, col: colIndex }, player: activePlayer },
         ...prevTurns,
@@ -20,6 +30,7 @@ function App() {
       return updateTurns;
     });
   }
+
   return (
     <main>
       <div id="game-container">
@@ -41,5 +52,4 @@ function App() {
     </main>
   );
 }
-
 export default App;
